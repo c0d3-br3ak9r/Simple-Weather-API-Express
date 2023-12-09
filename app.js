@@ -1,5 +1,6 @@
 const axios = require('axios')
 const express = require('express')
+const path = require("path");
 
 const app = express()
 
@@ -97,8 +98,7 @@ app.post("/getWeather", async (req, res) => {
         const city = cities[i];
         const latLong = await getLatLong(city);
         if ( !latLong.error ) {
-            const weather = await getWeather(latLong.latitude, latLong.longitude);
-            console.log(weather);
+            const weather = await getWeather(latLong.latitude, latLong.longitude)
             if ( weather.error ) 
                 weatherResult.weather[city] = "error"
             else 
@@ -110,6 +110,10 @@ app.post("/getWeather", async (req, res) => {
 
     res.status(200)
         .send(weatherResult);
+})
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "index.html"));
 })
 
 app.listen(port, () => {
